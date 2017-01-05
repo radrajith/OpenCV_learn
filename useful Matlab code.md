@@ -11,4 +11,4 @@ imshow(outim);							#output the smoothed image.
 ```
 
 
-[!gaussian filter](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/gaussian.PNG?raw=true)
+![gaussian filter](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/gaussian.PNG?raw=true)
