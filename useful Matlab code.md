@@ -1,5 +1,7 @@
 # Notes and Codes used in Matlab for Computer Vision
 
+#Week 1
+
 ## Gaussian filter
 ```Matlab
 hsize = 31;			%kernal size
@@ -76,6 +78,63 @@ disp('Index:'), disp(index);
 
 ***
 
+##Edge Detection
+
+###Sobel operator
+![sobel](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/sobel_1.PNG?raw=true)
+![sobel-2](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/sobel_2.PNG?raw=true)
+
+```Matlab
+%remember to convert the image to double before applying filter
+filt = fspecial('sobel');			%filter could be gaussian, sobel, prewitt, roberts: search online for examples
+```
+##Canny edge operator
+```Matlab
+edge(image, 'canny');				
+```
+
+***
+#Week 2
+
+##Hough Transform (finding lines)
+We find lines by method of voting
+- Each edge points votes for compatible lines
+- look for lines that get many votes. 
+
+###Hough Space
+
+The key to hough transform is the hough space. Each point on the image can have a line with mx+b going through it. This is graphed in the hough space, and then a bins are mapped. Which ever bin has the most number of votes, that is most instersecting points in hough space, then that is considered a line. 
+![Hough Space](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_1.PNG?raw=true)
+![Hough Space2](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_2.PNG?raw=true)
+
+###Polar representation of lines
+The hough space for a vertical line will have a slope of infinity, this causes problems. To solve this issue we will deal with polar coordinates.
+![Polar representation](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/polar_1.PNG?raw=true)
+
+###Hough Algorithm
+![Hough Algorithm](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_algorithm.PNG?raw=true)
+
+```Matlab
+%%load image and find the edges using canny operator
+edges = edge(image, 'canny');   			%find edges of the image that has been loaded already, using canny operator
+%apply hough transform to find candidate lines
+[accum theta rho] = hough(edges);			%hough function will return accum - accumulator array, theta - vector of angles, rho - vector of radius values
+figure, imagesc(accum, 'XData', theta, 'YData', rho), title('Hough accumulator');
+%find peaks in the hough accumulator matrix
+peaks = houghpeaks(accum, 100);			%100 - is the maximim number of peaks that we are interested in
+hold on; plot(theta(peaks(:,2)), rho(peaks(:,1)), 'rs'); hold off;		%peak return y(radius),x(angle)
+%find lines segments
+line_segs = houghlines(edges, theta, rho, peaks);
+%draw those lines segments on the image
+figure, imshow(img), title('Line Segments');
+hold on;
+for k =1:length(line_segs)
+	endpoints = [line_segs(k).point1; line_segs(k).point2];
+	plot(endpoints(:,1), endpoints(:,2), 'LineWidth', 2, 'color', 'green');
+end
+hold off;
+
+```
 
 
 

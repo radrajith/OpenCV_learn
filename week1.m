@@ -4,6 +4,11 @@
 
 %}
 %load image package
-pkg load image;
-noise = randn((size(im)).*sigma;
-output = im + noise
+
+brd = imread('test.png');
+figure,imshow(brd),title('original');
+gray_brd = rgb2gray(brd);
+figure, imshow(gray_brd), title('gray');
+edge = edge(gray_brd, 'canny',[],2);
+figure, imshow(edge), title('edges');
+
