@@ -117,14 +117,18 @@ The hough space for a vertical line will have a slope of infinity, this causes p
 ```Matlab
 %%load image and find the edges using canny operator
 edges = edge(image, 'canny');   			%find edges of the image that has been loaded already, using canny operator
+
 %apply hough transform to find candidate lines
 [accum theta rho] = hough(edges);			%hough function will return accum - accumulator array, theta - vector of angles, rho - vector of radius values
 figure, imagesc(accum, 'XData', theta, 'YData', rho), title('Hough accumulator');
+
 %find peaks in the hough accumulator matrix
 peaks = houghpeaks(accum, 100);			%100 - is the maximim number of peaks that we are interested in
 hold on; plot(theta(peaks(:,2)), rho(peaks(:,1)), 'rs'); hold off;		%peak return y(radius),x(angle)
+
 %find lines segments
 line_segs = houghlines(edges, theta, rho, peaks);
+
 %draw those lines segments on the image
 figure, imshow(img), title('Line Segments');
 hold on;
@@ -134,7 +138,34 @@ for k =1:length(line_segs)
 end
 hold off;
 
+%to get better accuracy
+%threshold is the minimum value in the accumulator array for  which the peak is recognized. in this case 0.6 times the max accumulator array value
+%NHoodSize - region for which the local maxima is computed. [rho, theta] 
+peaks = houghpeaks(accum, 100, 'Threshold', ceil(0.6*max(accum(:))),'NHoodSize', [5,5]);
+size(peaks)			%this time only 7 peaks are found. 
+figure, imagesc(theta, rho, accum), title('Hough Accumulator');
+hold on; plot(theta(peaks(:,2)),rho(peaks(:,1)), 'rs'); hold off;
+
+%fillgap is increased to 50 - maximum number of pixels allowed between two segments
+%for them to be counted as one, if they lie along the same line 
+%To focus more on the longer lines, the minimum lenght is set to be 100 pixels
+line_segs = houghlines(edges, theta, rho, peaks, 'FillGap', 50, 'MinLength', 100);	 
+
+%draw those lines segments on the image
+figure, imshow(img), title('Line Segments');
+hold on;
+for k =1:length(line_segs)
+	endpoints = [line_segs(k).point1; line_segs(k).point2];
+	plot(endpoints(:,1), endpoints(:,2), 'LineWidth', 2, 'color', 'green');
+end
+hold off;
+ 	
+
 ```
 
+![Hough Demo](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_demo.PNG?raw=true)
 
 
+##Hough transform for circles
+For this case lets assume the radius of the circle is known. the points in the circle will vote in the hough space. The intersection of these varios voting circles will be used as the center point of the circle as described by the image below.
+![Hough Cicle](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_circle.PNG?raw=true)
