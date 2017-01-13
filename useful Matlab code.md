@@ -166,6 +166,38 @@ hold off;
 ![Hough Demo](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_demo.PNG?raw=true)
 
 
-##Hough transform for circles
+###Hough transform for circles(with known radius)
 For this case lets assume the radius of the circle is known. the points in the circle will vote in the hough space. The intersection of these varios voting circles will be used as the center point of the circle as described by the image below.
 ![Hough Cicle](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_circle.PNG?raw=true)
+
+###Hough transform for circles(with unknown radius and without gradient)
+In order to find a circle with a unknown radius, though hough transform will have 3 dimentions (a, b, radius), For each points the voting is done in terms of drawing circles in the hough space for various radius(ie creating a cone like structure). By obtaining the intersection the center point can be found. Highly memory intensive process and will find a better algorithm in later classes
+![Hough Cicle with unknown radius](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_radius_unknown.PNG?raw=true)
+
+###Hough transform for circles(with unknown radius and with known  gradient)
+By obtaining a gradient of a point(slope of the point) the direction of the center of the circle is known. It can be found that the voting for various radius will lie along a line in the hough space(refer to image below). For the intersection of these lines on the hough space the circle be found. 
+![Hough Cicle with gradient and unknown radius](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_radius_gradient.PNG?raw=true)
+
+###Hough Algorithm
+![Hough Cicle Algorithm](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_circle_algorithm.PNG?raw=true)
+
+###Generalized Hough Transform
+
+building a hough table for an arbitrary object
+![Hough table 1](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_table_1.PNG?raw=true)
+
+Finding/Recognizing an object using hough table
+![Hough table 2](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/hough_table_2.PNG?raw=true)
+
+
+###Fourier Transform 
+
+Fourier Properties
+
+![fourier_properties](https://github.com/radrajith/OpenCV_learn/blob/master/notes_images/fourier_properties.PNG?raw=true)
+
+Refer to video of Fourier pair for good examples of how various transforms impacts the image
+
+
+
+
