@@ -2,7 +2,11 @@
 
 %% 1-a
 img = imread(fullfile('input', 'ps1-input0.png'));  % already grayscale
+figure, imshow(img), title('Original Image');
 %% TODO: Compute edge image img_edges
+img_edges = edge(img, 'canny'); 
+% since its a binary image the threshold will have no impact
+figure, imshow(img_edges), title('img1a - edges');
 imwrite(img_edges, fullfile('output', 'ps1-1-a-1.png'));  % save as output/ps1-1-a-1.png
 
 %% 2-a
@@ -14,3 +18,6 @@ peaks = hough_peaks(H, 10);  % defined in hough_peaks.m
 %% TODO: Highlight peak locations on accumulator array, save as output/ps1-2-b-1.png
 
 %% TODO: Rest of your code here
+
+
+%}
