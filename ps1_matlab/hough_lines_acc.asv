@@ -27,7 +27,7 @@ function [H, theta, rho] = hough_lines_acc(BW, varargin)
     %% TODO: Your code here
     %calculate size of rho
     %rho = sqrt(x^2 + y^2) converting from cartesian to polar
-    rhoSize = ceil(sqrt((size(BW,1)-1)^2 + (size(BW,2)-1)^2));   % the coordinates states at (0,0) but the image starts at (1,1)
+    rhoSize = sqrt((size(BW,1)-1)^2 + (size(BW,2)-1)^2);   % the coordinates states at (0,0) but the image starts at (1,1)
     rho = -rhoSize:rhoStep:rhoSize;           %creating array from -rhosize to +rhosize with step size of rhostep
     theta = 0:1:180;
     
@@ -37,14 +37,10 @@ function [H, theta, rho] = hough_lines_acc(BW, varargin)
     %for every edge point increment the value in the accumulator array
     for x = 1:size(BW,1)
         for y = 1:size(BW,2)
-            if(BW(x,y))                     %if there is edge then increment the bin
-                for t = 0:1:179
-                    r = ceil((x*cosd(t)) + (y*sind(t)));    %corresponding rho value
-                    r = r + rhoSize;
-                    H(r,t+1) = H(r,t+1) + 1;
-                end
-            end
-        end
-    end
+            if(BW(x,y))
+                t = ceil(atan(y/x))%corresponding theta value
+                r = x*cos(t) + y*sin(t);    %corresponding rho value
+                H(r,t) = H(r,t)+1;
+            end;
          
 end

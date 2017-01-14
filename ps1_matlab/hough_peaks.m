@@ -20,4 +20,7 @@ function peaks = hough_peaks(H, varargin)
     nHoodSize = p.Results.NHoodSize;
 
     % TODO: Your code here
+    for x = 1:size(H,1)
+        for y = 1:size(H,2)
+            
 end
